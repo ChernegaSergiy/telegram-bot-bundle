@@ -77,7 +77,7 @@ class UpdateDispatcher
         foreach ($this->commands as $command) {
             if ($command->getCommand() === $commandName) {
                 $command->handle($update);
-                return; // Stop routing once the command is executed
+                return;
             }
         }
     }
