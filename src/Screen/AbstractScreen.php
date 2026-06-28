@@ -29,7 +29,7 @@ abstract class AbstractScreen implements ScreenInterface
     /**
      * Helper to answer a callback query (removes the "loading" state from the inline button).
      */
-    protected function answerCallbackQuery(string $callbackQueryId, array $extraParams = []): array
+    protected function answerCallbackQuery(string $callbackQueryId, array $extraParams = []): array|bool
     {
         return $this->client->answerCallbackQuery($callbackQueryId, $extraParams);
     }

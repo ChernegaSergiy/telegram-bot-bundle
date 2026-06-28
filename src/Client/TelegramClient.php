@@ -53,7 +53,7 @@ class TelegramClient
         return $this->request('sendMessage', $params);
     }
 
-    public function answerCallbackQuery(string $callbackQueryId, array $extraParams = []): array
+    public function answerCallbackQuery(string $callbackQueryId, array $extraParams = []): array|bool
     {
         $params = array_merge([
             'callback_query_id' => $callbackQueryId,
