@@ -6,6 +6,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use TelegramBot\Bundle\Command\CommandInterface;
+use TelegramBot\Bundle\Screen\ScreenInterface;
 
 class TelegramBotExtension extends Extension
 {
@@ -17,7 +19,14 @@ class TelegramBotExtension extends Extension
         // Store the token as a container parameter so services can use it
         $container->setParameter('telegram_bot.token', $config['token']);
 
-        // Load the bundle's native services (like TelegramClient)
+        // Register interfaces for autoconfiguration so host apps don't need manual tagging
+        $container->registerForAutoconfiguration(ScreenInterface::class)
+            ->addTag('telegram_bot.screen');
+
+        $container->registerForAutoconfiguration(CommandInterface::class)
+            ->addTag('telegram_bot.command');
+
+        // Load the bundle's native services (like TelegramClient and UpdateDispatcher)
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
     }
