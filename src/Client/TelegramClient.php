@@ -21,7 +21,7 @@ class TelegramClient
     /**
      * Sends a generic API request to Telegram
      */
-    public function request(string $method, array $parameters = []): array
+    public function request(string $method, array $parameters = []): array|bool
     {
         $url = sprintf(self::API_URL, $this->botToken, $method);
 
@@ -30,7 +30,7 @@ class TelegramClient
                 'json' => $parameters,
             ]);
 
-            $content = $response->toArray();
+            $content = $response->toArray(false);
 
             if (!isset($content['ok']) || $content['ok'] !== true) {
                 throw new \RuntimeException('Telegram API Error: ' . ($content['description'] ?? 'Unknown error'));
@@ -85,7 +85,7 @@ class TelegramClient
         return $this->request('editMessageText', $params);
     }
     
-    public function deleteMessage(int|string $chatId, int $messageId): array
+    public function deleteMessage(int|string $chatId, int $messageId): array|bool
     {
         return $this->request('deleteMessage', [
             'chat_id' => $chatId,
