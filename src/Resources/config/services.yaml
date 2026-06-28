@@ -4,6 +4,13 @@ services:
         autowire: true
         autoconfigure: true
 
+    # Automatically register all classes in src/ as services
+    TelegramBot\Bundle\:
+        resource: '../../src/'
+        exclude:
+            - '../../src/DependencyInjection/'
+            - '../../src/TelegramBotBundle.php'
+
     # Register the TelegramClient as a service
     TelegramBot\Bundle\Client\TelegramClient:
         arguments:
