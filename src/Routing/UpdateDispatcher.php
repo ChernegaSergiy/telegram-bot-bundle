@@ -38,6 +38,14 @@ class UpdateDispatcher
                 $this->handleCommand($update);
                 return;
             }
+
+            // If it's a regular text message, pass it to screens (they might be waiting for user input state)
+            foreach ($this->screens as $screen) {
+                if ($screen->supports($update)) {
+                    $screen->handle($update);
+                    return; // Stop routing once a screen handles the text input
+                }
+            }
         }
 
         // Additional update types (plain text messages, photos, etc.) can be handled here in the future
@@ -45,11 +53,9 @@ class UpdateDispatcher
 
     private function handleCallbackQuery(array $update): void
     {
-        $action = $update['callback_query']['data'] ?? '';
-
         foreach ($this->screens as $screen) {
-            if ($screen->supports($action)) {
-                $screen->handle($action, $update);
+            if ($screen->supports($update)) {
+                $screen->handle($update);
                 return; // Stop routing once a screen handles the action
             }
         }

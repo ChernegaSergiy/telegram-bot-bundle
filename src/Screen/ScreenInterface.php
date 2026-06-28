@@ -5,18 +5,17 @@ namespace TelegramBot\Bundle\Screen;
 interface ScreenInterface
 {
     /**
-     * Determines whether this screen supports the given callback action.
+     * Determines if this screen can handle the given update.
      *
-     * @param string $action The action identifier from the callback data (e.g., 'author:view').
-     * @return bool True if this screen should handle the action.
+     * @param array $update The raw Telegram update array.
+     * @return bool True if this screen should handle the update.
      */
-    public function supports(string $action): bool;
+    public function supports(array $update): bool;
 
     /**
-     * Executes the screen's logic for the given action and update.
+     * Handles the update.
      *
-     * @param string $action The action identifier.
      * @param array $update The raw Telegram update array.
      */
-    public function handle(string $action, array $update): void;
+    public function handle(array $update): void;
 }
