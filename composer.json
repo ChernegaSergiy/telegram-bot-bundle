@@ -1,0 +1,23 @@
+{
+    "name": "morfeditorial/telegram-bot-bundle",
+    "description": "A universal Symfony Bundle for building Telegram bots with screens and commands routing.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "symfony/http-client": "^7.0|^8.0",
+        "symfony/dependency-injection": "^7.0|^8.0",
+        "symfony/config": "^7.0|^8.0",
+        "symfony/http-kernel": "^7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Morfeditorial\\TelegramBotBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    }
+}
