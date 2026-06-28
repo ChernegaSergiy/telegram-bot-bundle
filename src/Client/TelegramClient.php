@@ -62,6 +62,17 @@ class TelegramClient
         return $this->request('answerCallbackQuery', $params);
     }
 
+    public function sendPhoto(int|string $chatId, string $photo, array $extraParams = []): array
+    {
+        $params = array_merge([
+            'chat_id' => $chatId,
+            'photo' => $photo,
+            'parse_mode' => 'HTML',
+        ], $extraParams);
+
+        return $this->request('sendPhoto', $params);
+    }
+
     public function editMessageText(int|string $chatId, int $messageId, string $text, array $extraParams = []): array
     {
         $params = array_merge([
