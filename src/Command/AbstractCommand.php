@@ -1,8 +1,8 @@
 <?php
 
-namespace TelegramBot\Bundle\Command;
+namespace Morfeditorial\TelegramBotBundle\Command;
 
-use TelegramBot\Bundle\Client\TelegramClient;
+use Morfeditorial\TelegramBotBundle\Client\TelegramClient;
 
 abstract class AbstractCommand implements CommandInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace TelegramBot\Bundle\Screen;
+namespace Morfeditorial\TelegramBotBundle\Screen;
 
-use TelegramBot\Bundle\Client\TelegramClient;
+use Morfeditorial\TelegramBotBundle\Client\TelegramClient;
 
 abstract class AbstractScreen implements ScreenInterface
 {

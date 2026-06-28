@@ -1,13 +1,13 @@
 <?php
 
-namespace TelegramBot\Bundle\DependencyInjection;
+namespace Morfeditorial\TelegramBotBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use TelegramBot\Bundle\Command\CommandInterface;
-use TelegramBot\Bundle\Screen\ScreenInterface;
+use Morfeditorial\TelegramBotBundle\Command\CommandInterface;
+use Morfeditorial\TelegramBotBundle\Screen\ScreenInterface;
 
 class TelegramBotExtension extends Extension
 {

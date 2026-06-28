@@ -1,6 +1,6 @@
 <?php
 
-namespace TelegramBot\Bundle\DependencyInjection;
+namespace Morfeditorial\TelegramBotBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

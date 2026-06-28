@@ -5,14 +5,15 @@ services:
         autoconfigure: true
 
     # Automatically register all classes in src/ as services
-    TelegramBot\Bundle\:
-        resource: '../../src/'
+    Morfeditorial\TelegramBotBundle\:
+        resource: '../../'
         exclude:
-            - '../../src/DependencyInjection/'
-            - '../../src/TelegramBotBundle.php'
+            - '../../DependencyInjection/'
+            - '../../TelegramBotBundle.php'
+            - '../../Resources/'
 
     # Register the TelegramClient as a service
-    TelegramBot\Bundle\Client\TelegramClient:
+    Morfeditorial\TelegramBotBundle\Client\TelegramClient:
         arguments:
             $httpClient: '@http_client'
             $botToken: '%telegram_bot.token%'

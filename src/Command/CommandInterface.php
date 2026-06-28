@@ -1,6 +1,6 @@
 <?php
 
-namespace TelegramBot\Bundle\Command;
+namespace Morfeditorial\TelegramBotBundle\Command;
 
 interface CommandInterface
 {

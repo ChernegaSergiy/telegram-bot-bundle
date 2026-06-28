@@ -1,6 +1,6 @@
 <?php
 
-namespace TelegramBot\Bundle\Utils;
+namespace Morfeditorial\TelegramBotBundle\Utils;
 
 class KeyboardHelper
 {
