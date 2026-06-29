@@ -1,6 +1,6 @@
 <?php
 
-namespace Morfeditorial\TelegramBotBundle\Client;
+namespace morfeditorial\TelegramBotBundle\Client;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;

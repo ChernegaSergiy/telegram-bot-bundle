@@ -1,6 +1,6 @@
 <?php
 
-namespace Morfeditorial\TelegramBotBundle\Screen;
+namespace morfeditorial\TelegramBotBundle\Screen;
 
 interface ScreenInterface
 {

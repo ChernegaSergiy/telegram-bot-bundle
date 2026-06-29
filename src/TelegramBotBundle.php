@@ -1,6 +1,6 @@
 <?php
 
-namespace Morfeditorial\TelegramBotBundle;
+namespace morfeditorial\TelegramBotBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
