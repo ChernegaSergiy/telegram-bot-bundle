@@ -1,10 +1,10 @@
 <?php
 
-namespace morfeditorial\TelegramBotBundle\Routing;
+namespace Morfeditorial\TelegramBotBundle\Routing;
 
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
-use morfeditorial\TelegramBotBundle\Command\CommandInterface;
-use morfeditorial\TelegramBotBundle\Screen\ScreenInterface;
+use Morfeditorial\TelegramBotBundle\Command\CommandInterface;
+use Morfeditorial\TelegramBotBundle\Screen\ScreenInterface;
 
 class UpdateDispatcher
 {
