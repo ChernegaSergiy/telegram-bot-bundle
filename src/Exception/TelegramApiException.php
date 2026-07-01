@@ -32,13 +32,4 @@ class TelegramApiException extends \RuntimeException
     {
         return $this->parameters;
     }
-
-    /**
-     * Telegram does not provide a specific error code for "message is not modified"
-     * (it just returns 400 Bad Request). We must check the description string.
-     */
-    public function isMessageNotModified(): bool
-    {
-        return $this->telegramErrorCode === 400 && str_contains(strtolower($this->telegramDescription), 'message is not modified');
-    }
 }
