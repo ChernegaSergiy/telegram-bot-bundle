@@ -3,6 +3,12 @@
     "description": "A universal Symfony Bundle for building Telegram bots with screens and commands routing.",
     "type": "symfony-bundle",
     "license": "LicenseRef-CSSM-Unlimited-2.0",
+    "authors": [
+        {
+            "name": "Serhii Cherneha",
+            "email": "chernegasergiy3@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=8.2",
         "symfony/http-client": "^7.0|^8.0",
