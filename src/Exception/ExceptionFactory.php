@@ -10,6 +10,7 @@ use Morfeditorial\TelegramBotBundle\Exception\Api\NotFoundException;
 use Morfeditorial\TelegramBotBundle\Exception\Api\UnauthorizedException;
 use Morfeditorial\TelegramBotBundle\Exception\Api\SeeOtherException;
 use Morfeditorial\TelegramBotBundle\Exception\Api\NotAcceptableException;
+use Morfeditorial\TelegramBotBundle\Exception\Api\TimeoutException;
 
 class ExceptionFactory
 {
@@ -22,7 +23,8 @@ class ExceptionFactory
         $description = $content['description'] ?? 'Unknown error';
         $parameters = $content['parameters'] ?? [];
 
-        return match ($errorCode) {
+        return match ((int)$errorCode) {
+            -503 => new TimeoutException($description, $errorCode, $parameters),
             303 => new SeeOtherException($description, $errorCode, $parameters),
             400 => new BadRequestException($description, $errorCode, $parameters),
             401 => new UnauthorizedException($description, $errorCode, $parameters),
