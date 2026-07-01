@@ -12,6 +12,13 @@ interface CommandInterface
     public function getCommand(): string;
 
     /**
+     * Returns an array of alternative command names (aliases).
+     *
+     * @return array
+     */
+    public function getAliases(): array;
+
+    /**
      * Executes the command's logic.
      *
      * @param array $update The raw Telegram update array containing the message.
