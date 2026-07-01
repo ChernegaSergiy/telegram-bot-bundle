@@ -33,10 +33,7 @@ class TelegramClient
             $content = $response->toArray(false);
 
             if (!isset($content['ok']) || $content['ok'] !== true) {
-                throw new \Morfeditorial\TelegramBotBundle\Exception\TelegramApiException(
-                    $content['description'] ?? 'Unknown error',
-                    $content['error_code'] ?? 0
-                );
+                throw \Morfeditorial\TelegramBotBundle\Exception\ExceptionFactory::createFromResult($content);
             }
 
             return $content['result'] ?? [];
