@@ -1,3 +1,5 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://stand-with-ukraine.pp.ua)
+
 # Telegram Bot Bundle
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/morfeditorial/telegram-bot-bundle.svg?label=Packagist&logo=packagist)](https://packagist.org/packages/morfeditorial/telegram-bot-bundle)
