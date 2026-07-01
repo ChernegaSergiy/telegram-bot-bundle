@@ -6,11 +6,10 @@ services:
 
     # Automatically register all classes in src/ as services
     Morfeditorial\TelegramBotBundle\:
-        resource: '../../'
+        resource: '../src/'
         exclude:
-            - '../../DependencyInjection/'
-            - '../../TelegramBotBundle.php'
-            - '../../Resources/'
+            - '../src/DependencyInjection/'
+            - '../src/TelegramBotBundle.php'
 
     # Register the TelegramClient as a service
     Morfeditorial\TelegramBotBundle\Client\TelegramClient:
