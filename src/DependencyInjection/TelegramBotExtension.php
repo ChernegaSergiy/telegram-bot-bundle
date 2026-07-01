@@ -27,7 +27,7 @@ class TelegramBotExtension extends Extension
             ->addTag('telegram_bot.command');
 
         // Load the bundle's native services (like TelegramClient and UpdateDispatcher)
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.yaml');
     }
 }
