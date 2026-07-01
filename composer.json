@@ -14,10 +14,5 @@
         "psr-4": {
             "Morfeditorial\\TelegramBotBundle\\": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "1.0-dev"
-        }
     }
 }
