@@ -75,7 +75,7 @@ class UpdateDispatcher
         }
 
         foreach ($this->commands as $command) {
-            if ($command->getCommand() === $commandName) {
+            if ($command->getCommand() === $commandName || in_array($commandName, $command->getAliases(), true)) {
                 $command->handle($update);
                 return;
             }
