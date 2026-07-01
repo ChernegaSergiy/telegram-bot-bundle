@@ -54,10 +54,10 @@ Screens are automatically discovered and registered by the bundle.
 
 ### 2. Payload Routing
 The bundle encourages using a standard payload structure for inline keyboards: `domain:action:args`.
-For example, `project:delete:42`. This allows your screens to precisely intercept events meant for them.
+For example, `feedback:delete:42`. This allows your screens to precisely intercept events meant for them.
 
 ### 3. State Management
-When asking a user for input (e.g., "Enter project name"), you can track their state in your application's database or cache. Your screen can then intercept their next text message based on this state.
+When asking a user for input (e.g., "Please type your feedback"), you can track their state in your application's database or cache. Your screen can then intercept their next text message based on this state.
 
 ## Usage
 
@@ -66,18 +66,18 @@ When asking a user for input (e.g., "Enter project name"), you can track their s
 Create a new class extending `AbstractScreen` (or your project's BaseScreen).
 
 ```php
-namespace App\Screens\Project;
+namespace App\Screen\Feedback;
 
 use Morfeditorial\TelegramBotBundle\Screen\AbstractScreen;
 
-class ProjectViewScreen extends AbstractScreen
+class FeedbackViewScreen extends AbstractScreen
 {
     public function supports(array $update): bool
     {
         $data = $update['callback_query']['data'] ?? '';
         
-        // This screen intercepts any payload starting with 'project:view:'
-        return str_starts_with($data, 'project:view:');
+        // This screen intercepts any payload starting with 'feedback:view:'
+        return str_starts_with($data, 'feedback:view:');
     }
 
     public function handle(array $update): void
@@ -87,12 +87,12 @@ class ProjectViewScreen extends AbstractScreen
         
         // Extract arguments
         $parts = explode(':', $data);
-        $projectId = $parts[2] ?? null;
+        $feedbackId = $parts[2] ?? null;
 
         // Use the injected client to send a message
         $this->client->sendMessage([
             'chat_id' => $chatId,
-            'text' => "Viewing project #" . $projectId,
+            'text' => "Viewing feedback #" . $feedbackId,
         ]);
     }
 }
@@ -103,12 +103,12 @@ class ProjectViewScreen extends AbstractScreen
 To handle user input sequentially, you can inject your own state tracking service (e.g., a Doctrine Repository or Redis Cache):
 
 ```php
-namespace App\Screens\Project;
+namespace App\Screen\Feedback;
 
 use Morfeditorial\TelegramBotBundle\Screen\AbstractScreen;
 use App\Service\MyStateService; // Example custom service
 
-class ProjectCreateScreen extends AbstractScreen
+class FeedbackCreateScreen extends AbstractScreen
 {
     private MyStateService $stateService;
 
@@ -121,8 +121,8 @@ class ProjectCreateScreen extends AbstractScreen
     {
         $userId = $update['message']['from']['id'] ?? 0;
         
-        return ($update['callback_query']['data'] ?? '') === 'project:create' ||
-               $this->stateService->getState($userId) === 'awaiting_project_title';
+        return ($update['callback_query']['data'] ?? '') === 'feedback:create' ||
+               $this->stateService->getState($userId) === 'awaiting_feedback_text';
     }
 
     public function handle(array $update): void
@@ -132,18 +132,18 @@ class ProjectCreateScreen extends AbstractScreen
         
         if (isset($update['callback_query'])) {
             // Step 1: Start creation
-            $this->stateService->setState($userId, 'awaiting_project_title');
-            $this->client->sendMessage(['chat_id' => $chatId, 'text' => "Please enter the project title:"]);
+            $this->stateService->setState($userId, 'awaiting_feedback_text');
+            $this->client->sendMessage(['chat_id' => $chatId, 'text' => "Please type your feedback:"]);
             return;
         }
 
         // Step 2: Receive input
-        if ($this->stateService->getState($userId) === 'awaiting_project_title') {
-            $title = $update['message']['text'];
+        if ($this->stateService->getState($userId) === 'awaiting_feedback_text') {
+            $feedbackText = $update['message']['text'];
             // Save to DB...
             
             $this->stateService->clearState($userId);
-            $this->client->sendMessage(['chat_id' => $chatId, 'text' => "Project '$title' created!"]);
+            $this->client->sendMessage(['chat_id' => $chatId, 'text' => "Thank you for your feedback!"]);
         }
     }
 }
