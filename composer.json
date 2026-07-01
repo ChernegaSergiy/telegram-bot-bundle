@@ -2,7 +2,7 @@
     "name": "morfeditorial/telegram-bot-bundle",
     "description": "A universal Symfony Bundle for building Telegram bots with screens and commands routing.",
     "type": "symfony-bundle",
-    "license": "MIT",
+    "license": "LicenseRef-CSSM-Unlimited-2.0",
     "require": {
         "php": ">=8.2",
         "symfony/http-client": "^7.0|^8.0",
