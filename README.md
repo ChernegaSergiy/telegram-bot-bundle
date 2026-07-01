@@ -11,7 +11,7 @@ A powerful, object-oriented, and highly extensible Telegram Bot integration bund
 ## Features
 
 - **Object-Oriented Screen Architecture**: Build bots using individual Screen classes that handle specific states and actions.
-- **State Management**: Built-in `UserStateService` to track user progression through complex multi-step flows (e.g., forms, wizards).
+- **State Management**: Flexible architecture allowing you to track user progression through complex multi-step flows (e.g., forms, wizards) using your own persistence layer.
 - **Standardized Payload Routing**: Automatically route `callback_query` data using a structured payload format (`domain:action:args`).
 - **Seamless Symfony Integration**: Full support for Symfony Dependency Injection, autowiring, and event dispatching.
 - **Support for Long Polling & Webhooks**: Flexible transport layer adapting to your deployment environment.
@@ -57,7 +57,7 @@ The bundle encourages using a standard payload structure for inline keyboards: `
 For example, `project:delete:42`. This allows your screens to precisely intercept events meant for them.
 
 ### 3. State Management
-When asking a user for input (e.g., "Enter project name"), you assign a state to their ID. The corresponding screen will intercept their next text message based on this state.
+When asking a user for input (e.g., "Enter project name"), you can track their state in your application's database or cache. Your screen can then intercept their next text message based on this state.
 
 ## Usage
 
@@ -68,7 +68,7 @@ Create a new class extending `AbstractScreen` (or your project's BaseScreen).
 ```php
 namespace App\Screens\Project;
 
-use Morfeditorial\TelegramBotBundle\Screens\AbstractScreen;
+use Morfeditorial\TelegramBotBundle\Screen\AbstractScreen;
 
 class ProjectViewScreen extends AbstractScreen
 {
@@ -100,19 +100,19 @@ class ProjectViewScreen extends AbstractScreen
 
 ### Handling Multi-Step Forms (State Machine)
 
-To handle user input sequentially, use the `UserStateService`:
+To handle user input sequentially, you can inject your own state tracking service (e.g., a Doctrine Repository or Redis Cache):
 
 ```php
 namespace App\Screens\Project;
 
-use Morfeditorial\TelegramBotBundle\Screens\AbstractScreen;
-use Morfeditorial\TelegramBotBundle\Services\UserStateService;
+use Morfeditorial\TelegramBotBundle\Screen\AbstractScreen;
+use App\Service\MyStateService; // Example custom service
 
 class ProjectCreateScreen extends AbstractScreen
 {
-    private UserStateService $stateService;
+    private MyStateService $stateService;
 
-    public function __construct(UserStateService $stateService)
+    public function __construct(MyStateService $stateService)
     {
         $this->stateService = $stateService;
     }
