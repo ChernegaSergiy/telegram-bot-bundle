@@ -45,8 +45,8 @@ return [
 
 ### 1. The Screen System (`AbstractScreen`)
 Instead of one massive loop handling all updates, this bundle uses "Screens". A Screen is a dedicated class that answers two questions:
-- *Can I handle this update?* (`supports()`)
-- *How do I handle this update?* (`handle()`)
+- **Can I handle this update?** &mdash; Implemented via `supports()`
+- **How do I handle this update?** &mdash; Implemented via `handle()`
 
 Screens are automatically discovered and registered by the bundle.
 
