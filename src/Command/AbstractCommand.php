@@ -10,6 +10,11 @@ abstract class AbstractCommand implements CommandInterface
         protected readonly TelegramClient $client
     ) {}
 
+    public function getAliases(): array
+    {
+        return [];
+    }
+
     /**
      * Automatically extracts the chat ID from the update and sends a reply message.
      */
