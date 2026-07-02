@@ -7,8 +7,9 @@ use Morfeditorial\TelegramBotBundle\Client\TelegramClient;
 abstract class AbstractScreen implements ScreenInterface
 {
     public function __construct(
-        protected readonly TelegramClient $client
-    ) {}
+        protected readonly TelegramClient $client,
+    ) {
+    }
 
     /**
      * Helper to quickly send a message to the chat.

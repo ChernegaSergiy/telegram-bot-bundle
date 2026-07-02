@@ -2,23 +2,24 @@
 
 namespace Morfeditorial\TelegramBotBundle\Routing;
 
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Morfeditorial\TelegramBotBundle\Command\CommandInterface;
 use Morfeditorial\TelegramBotBundle\Screen\ScreenInterface;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class UpdateDispatcher
 {
     /**
      * @param iterable<CommandInterface> $commands
-     * @param iterable<ScreenInterface> $screens
+     * @param iterable<ScreenInterface>  $screens
      */
     public function __construct(
         #[TaggedIterator('telegram_bot.command')]
         private readonly iterable $commands = [],
-        
+
         #[TaggedIterator('telegram_bot.screen')]
-        private readonly iterable $screens = []
-    ) {}
+        private readonly iterable $screens = [],
+    ) {
+    }
 
     /**
      * Parses the raw Telegram update and dispatches it to the appropriate Command or Screen.
@@ -27,15 +28,17 @@ class UpdateDispatcher
     {
         if (isset($update['callback_query'])) {
             $this->handleCallbackQuery($update);
+
             return;
         }
 
         if (isset($update['message']['text'])) {
             $text = $update['message']['text'];
-            
+
             // Check if it's a slash command
             if (str_starts_with($text, '/')) {
                 $this->handleCommand($update);
+
                 return;
             }
 
@@ -43,6 +46,7 @@ class UpdateDispatcher
             foreach ($this->screens as $screen) {
                 if ($screen->supports($update)) {
                     $screen->handle($update);
+
                     return; // Stop routing once a screen handles the text input
                 }
             }
@@ -56,6 +60,7 @@ class UpdateDispatcher
         foreach ($this->screens as $screen) {
             if ($screen->supports($update)) {
                 $screen->handle($update);
+
                 return; // Stop routing once a screen handles the action
             }
         }
@@ -64,11 +69,11 @@ class UpdateDispatcher
     private function handleCommand(array $update): void
     {
         $text = $update['message']['text'] ?? '';
-        
+
         // Extract command name (e.g., "/start" -> "start")
         $parts = explode(' ', ltrim($text, '/'), 2);
         $commandName = strtolower($parts[0]);
-        
+
         // Handle bot mentions in groups (e.g., "/start@MyCoolBot" -> "start")
         if (str_contains($commandName, '@')) {
             $commandName = explode('@', $commandName)[0];
@@ -77,6 +82,7 @@ class UpdateDispatcher
         foreach ($this->commands as $command) {
             if ($command->getCommand() === $commandName || in_array($commandName, $command->getAliases(), true)) {
                 $command->handle($update);
+
                 return;
             }
         }

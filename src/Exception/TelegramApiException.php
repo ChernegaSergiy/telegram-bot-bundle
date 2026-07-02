@@ -8,12 +8,12 @@ class TelegramApiException extends \RuntimeException
     private string $telegramDescription;
     private array $parameters;
 
-    public function __construct(string $description, int $errorCode = 0, array $parameters = [], \Throwable $previous = null)
+    public function __construct(string $description, int $errorCode = 0, array $parameters = [], ?\Throwable $previous = null)
     {
         $this->telegramErrorCode = $errorCode;
         $this->telegramDescription = $description;
         $this->parameters = $parameters;
-        
+
         $message = sprintf('Telegram API Error %d: %s', $errorCode, $description);
         parent::__construct($message, $errorCode, $previous);
     }

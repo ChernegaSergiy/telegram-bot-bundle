@@ -12,6 +12,7 @@ class FloodWaitException extends TelegramApiException
     public function getRetryAfter(): int
     {
         $parameters = $this->getParameters();
+
         return $parameters['retry_after'] ?? 0;
     }
 }

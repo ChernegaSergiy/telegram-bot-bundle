@@ -2,8 +2,8 @@
 
 namespace Morfeditorial\TelegramBotBundle\Client;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * A modern replacement for tgLib.php
@@ -15,11 +15,12 @@ class TelegramClient
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly string $botToken
-    ) {}
+        private readonly string $botToken,
+    ) {
+    }
 
     /**
-     * Sends a generic API request to Telegram
+     * Sends a generic API request to Telegram.
      */
     public function request(string $method, array $parameters = []): array|bool
     {
@@ -32,13 +33,13 @@ class TelegramClient
 
             $content = $response->toArray(false);
 
-            if (!isset($content['ok']) || $content['ok'] !== true) {
+            if (!isset($content['ok']) || true !== $content['ok']) {
                 throw \Morfeditorial\TelegramBotBundle\Exception\ExceptionFactory::createFromResult($content);
             }
 
             return $content['result'] ?? [];
         } catch (TransportExceptionInterface $e) {
-            throw new \RuntimeException('Network error while communicating with Telegram: ' . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Network error while communicating with Telegram: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -84,7 +85,7 @@ class TelegramClient
 
         return $this->request('editMessageText', $params);
     }
-    
+
     public function deleteMessage(int|string $chatId, int $messageId): array|bool
     {
         return $this->request('deleteMessage', [
