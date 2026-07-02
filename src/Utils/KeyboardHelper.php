@@ -7,7 +7,7 @@ class KeyboardHelper
     /**
      * Creates an inline keyboard markup JSON string.
      *
-     * @param array $rows array of rows, where each row is an array of buttons
+     * @param array $rows Array of rows, where each row is an array of buttons
      */
     public static function inlineKeyboard(array $rows): string
     {
@@ -33,9 +33,9 @@ class KeyboardHelper
     /**
      * Creates a reply keyboard markup JSON string.
      *
-     * @param array $rows    array of rows, where each row is an array of buttons
-     * @param bool  $resize  requests clients to resize the keyboard vertically for optimal fit
-     * @param bool  $oneTime requests clients to hide the keyboard as soon as it's been used
+     * @param array $rows    Array of rows, where each row is an array of buttons
+     * @param bool  $resize  Requests clients to resize the keyboard vertically for optimal fit
+     * @param bool  $oneTime Requests clients to hide the keyboard as soon as it's been used
      */
     public static function replyKeyboard(array $rows, bool $resize = true, bool $oneTime = false): string
     {

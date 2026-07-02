@@ -17,7 +17,7 @@ interface CommandInterface
     /**
      * Executes the command's logic.
      *
-     * @param array $update the raw Telegram update array containing the message
+     * @param array $update The raw Telegram update array containing the message
      */
     public function handle(array $update): void;
 }
