@@ -27,7 +27,9 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-Telegram-Init-Data') || str_starts_with($request->headers->get('Authorization', ''), 'tma ');
+        return $request->headers->has('X-Telegram-Init-Data') 
+            || str_starts_with($request->headers->get('Authorization', ''), 'tma ')
+            || $request->query->has('initData');
     }
 
     public function authenticate(Request $request): Passport
@@ -39,6 +41,10 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
             if (str_starts_with($authHeader, 'tma ')) {
                 $initData = substr($authHeader, 4);
             }
+        }
+        
+        if (!$initData) {
+            $initData = $request->query->get('initData');
         }
 
         if (!$initData) {
@@ -64,7 +70,7 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
         }
 
         return new Passport(
-            new UserBadge($telegramId, function () use ($user) {
+            new UserBadge($user->getUserIdentifier(), function () use ($user) {
                 return $user;
             }),
             new CustomCredentials(function () {
