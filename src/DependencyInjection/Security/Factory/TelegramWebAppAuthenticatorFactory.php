@@ -31,7 +31,7 @@ class TelegramWebAppAuthenticatorFactory implements AuthenticatorFactoryInterfac
 
         $container
             ->setDefinition($authenticatorId, new ChildDefinition('morfeditorial.telegram_bot.security.authenticator'))
-            ->replaceArgument(0, new Reference('telegram_bot.token'))
+            ->replaceArgument(0, '%telegram_bot.token%')
             ->replaceArgument(1, new Reference('event_dispatcher'));
 
         return $authenticatorId;
