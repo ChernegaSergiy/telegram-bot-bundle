@@ -2,6 +2,7 @@
 
 namespace Morfeditorial\TelegramBotBundle\Security;
 
+use Morfeditorial\TelegramBotBundle\Event\TelegramUserAuthenticatedEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -11,14 +12,17 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TelegramWebAppAuthenticator extends AbstractAuthenticator
 {
     private string $botToken;
+    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(string $botToken)
+    public function __construct(string $botToken, EventDispatcherInterface $eventDispatcher)
     {
         $this->botToken = $botToken;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function supports(Request $request): ?bool
@@ -49,11 +53,19 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 
         $telegramId = (string) $userData['id'];
 
+        $event = new TelegramUserAuthenticatedEvent($userData);
+        $this->eventDispatcher->dispatch($event);
+
+        $user = $event->getUser();
+
+        if (!$user) {
+            // Provide a generic fallback or throw an error if the host app didn't set a user
+            throw new CustomUserMessageAuthenticationException('Telegram user authenticated, but no User entity was provided by the host application.');
+        }
+
         return new Passport(
-            new UserBadge($telegramId, function ($identifier) {
-                // Return a wrapper user object, or let the user provider handle it.
-                // However, without a custom user provider, UserBadge will just call the default one with this identifier.
-                // We will leave the closure empty so it uses the firewall's User Provider.
+            new UserBadge($telegramId, function () use ($user) {
+                return $user;
             }),
             new CustomCredentials(function () {
                 return true; // The cryptography validation already proved their identity
