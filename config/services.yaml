@@ -17,3 +17,15 @@ services:
             $httpClient: '@http_client'
             $botToken: '%telegram_bot.token%'
         public: true
+
+    Morfeditorial\TelegramBotBundle\Routing\UpdateDispatcher:
+        arguments:
+            $screens: !tagged_iterator telegram_bot.screen
+            $commands: !tagged_iterator telegram_bot.command
+
+    morfeditorial.telegram_bot.security.authenticator:
+        class: Morfeditorial\TelegramBotBundle\Security\TelegramWebAppAuthenticator
+        abstract: true
+        arguments:
+            - '' # Token (injected by factory)
+            - '' # EventDispatcher (injected by factory)
