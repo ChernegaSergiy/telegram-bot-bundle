@@ -3,8 +3,10 @@
 namespace Morfeditorial\TelegramBotBundle\Security;
 
 use Morfeditorial\TelegramBotBundle\Event\TelegramUserAuthenticatedEvent;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -18,11 +20,13 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 {
     private string $botToken;
     private EventDispatcherInterface $eventDispatcher;
+    private string $loginUrl;
 
-    public function __construct(string $botToken, EventDispatcherInterface $eventDispatcher)
+    public function __construct(string $botToken, EventDispatcherInterface $eventDispatcher, string $loginUrl = '/login')
     {
         $this->botToken = $botToken;
         $this->eventDispatcher = $eventDispatcher;
+        $this->loginUrl = $loginUrl;
     }
 
     public function supports(Request $request): ?bool
@@ -86,15 +90,13 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // For API/XHR requests return JSON; for browser requests return null
-        // so the firewall entry_point handles the redirect to /login.
         if ($request->isXmlHttpRequest() || str_starts_with($request->getPathInfo(), '/api/')) {
             return new Response(json_encode(['error' => $exception->getMessage()]), Response::HTTP_UNAUTHORIZED, [
                 'Content-Type' => 'application/json',
             ]);
         }
 
-        return null;
+        return new RedirectResponse($this->loginUrl);
     }
 
     private function validateInitData(string $initData): ?array
