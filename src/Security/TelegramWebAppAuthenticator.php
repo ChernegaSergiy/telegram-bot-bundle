@@ -96,7 +96,7 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
             ]);
         }
 
-        return new RedirectResponse($this->loginUrl);
+        return new RedirectResponse('/login');
     }
 
     private function validateInitData(string $initData): ?array
