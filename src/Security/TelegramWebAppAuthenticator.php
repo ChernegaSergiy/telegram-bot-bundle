@@ -31,7 +31,7 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-Telegram-Init-Data') 
+        return $request->headers->has('X-Telegram-Init-Data')
             || str_starts_with($request->headers->get('Authorization', ''), 'tma ')
             || $request->query->has('initData');
     }
@@ -46,7 +46,7 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
                 $initData = substr($authHeader, 4);
             }
         }
-        
+
         if (!$initData) {
             $initData = $request->query->get('initData');
         }
