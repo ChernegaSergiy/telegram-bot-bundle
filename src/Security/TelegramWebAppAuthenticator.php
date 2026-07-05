@@ -86,9 +86,15 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return new Response(json_encode(['error' => $exception->getMessage()]), Response::HTTP_UNAUTHORIZED, [
-            'Content-Type' => 'application/json',
-        ]);
+        // For API/XHR requests return JSON; for browser requests return null
+        // so the firewall entry_point handles the redirect to /login.
+        if ($request->isXmlHttpRequest() || str_starts_with($request->getPathInfo(), '/api/')) {
+            return new Response(json_encode(['error' => $exception->getMessage()]), Response::HTTP_UNAUTHORIZED, [
+                'Content-Type' => 'application/json',
+            ]);
+        }
+
+        return null;
     }
 
     private function validateInitData(string $initData): ?array
