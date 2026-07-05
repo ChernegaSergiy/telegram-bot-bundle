@@ -3,10 +3,10 @@
 namespace Morfeditorial\TelegramBotBundle\Security;
 
 use Morfeditorial\TelegramBotBundle\Event\TelegramUserAuthenticatedEvent;
+use Morfeditorial\TelegramBotBundle\InitData\TelegramInitDataResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -18,50 +18,35 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TelegramWebAppAuthenticator extends AbstractAuthenticator
 {
-    private string $botToken;
+    private TelegramInitDataResolver $resolver;
     private EventDispatcherInterface $eventDispatcher;
     private string $loginUrl;
 
     public function __construct(string $botToken, EventDispatcherInterface $eventDispatcher, string $loginUrl = '/login')
     {
-        $this->botToken = $botToken;
+        $this->resolver = new TelegramInitDataResolver($botToken);
         $this->eventDispatcher = $eventDispatcher;
         $this->loginUrl = $loginUrl;
     }
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-Telegram-Init-Data')
-            || str_starts_with($request->headers->get('Authorization', ''), 'tma ')
-            || $request->query->has('initData');
+        return $this->resolver->requestHasInitData($request);
     }
 
     public function authenticate(Request $request): Passport
     {
-        $initData = $request->headers->get('X-Telegram-Init-Data');
-
-        if (!$initData) {
-            $authHeader = $request->headers->get('Authorization', '');
-            if (str_starts_with($authHeader, 'tma ')) {
-                $initData = substr($authHeader, 4);
-            }
-        }
-
-        if (!$initData) {
-            $initData = $request->query->get('initData');
-        }
+        $initData = $this->resolver->extractRaw($request);
 
         if (!$initData) {
             throw new CustomUserMessageAuthenticationException('No Telegram initData provided.');
         }
 
-        $userData = $this->validateInitData($initData);
+        $userData = $this->resolver->validate($initData);
 
         if (!$userData || !isset($userData['id'])) {
             throw new CustomUserMessageAuthenticationException('Invalid Telegram initData signature.');
         }
-
-        $telegramId = (string) $userData['id'];
 
         $event = new TelegramUserAuthenticatedEvent($userData);
         $this->eventDispatcher->dispatch($event);
@@ -96,34 +81,6 @@ class TelegramWebAppAuthenticator extends AbstractAuthenticator
             ]);
         }
 
-        return new RedirectResponse('/login');
-    }
-
-    private function validateInitData(string $initData): ?array
-    {
-        parse_str($initData, $data);
-
-        if (!isset($data['hash'])) {
-            return null;
-        }
-
-        $hash = $data['hash'];
-        unset($data['hash']);
-
-        ksort($data);
-        $dataCheckString = [];
-        foreach ($data as $key => $value) {
-            $dataCheckString[] = $key.'='.$value;
-        }
-        $dataCheckString = implode("\n", $dataCheckString);
-
-        $secretKey = hash_hmac('sha256', $this->botToken, 'WebAppData', true);
-        $calculatedHash = bin2hex(hash_hmac('sha256', $dataCheckString, $secretKey, true));
-
-        if (hash_equals($calculatedHash, $hash)) {
-            return json_decode($data['user'] ?? '{}', true);
-        }
-
-        return null;
+        return new RedirectResponse($this->loginUrl);
     }
 }
